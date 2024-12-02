@@ -1,37 +1,25 @@
 package com.nata;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 public class Main {
 
+    private static final List<Integer> LIST1 = new ArrayList<>(Arrays.asList(2,8,0,-4,17,23,45,7,9,11,5,3,1));
+    private static final List<Integer> LIST2 = new ArrayList<>(Arrays.asList(39,10,6,5,10,15,4,9,10,6,7,9,2,49,-3));
+    private static final List<Integer> LIST3 = new ArrayList<>(Arrays.asList(44,55,33,22,11, -22, -44));
+
     public static void main(String[] args) {
 
-        List<Integer> result = new MergeSort<Integer>().merge(
-            List.of(0,3,7,8,12,17,18,19),
-            List.of(-1,4,5,9,11,15,24));
+        System.out.println(new MergeSort<Integer>().sort(LIST1));
+        System.out.println(new MergeSort<Integer>().sort(LIST2));
+        System.out.println(new MergeSort<Integer>().sort(LIST3));
+        System.out.println(new MergeSort<String>().sort(Set.of("mono", "abc", "brown", "mix", "black", "white")));
 
-        System.out.println("merged 1: " + result);
-
-        List<Integer> result1 = new MergeSort<Integer>().merge(
-            List.of(5),
-            List.of(3));
-
-        System.out.println("merged 2:" + result1);
-
-        List<Integer> result3 = new MergeSort<Integer>().sort(Set.of(
-            6,13,2,8,0,-4,17,23,45,7,9,11,5,3,1));
-
-        System.out.println("sorted 3: " + result3);
-
-        List<Integer> result4 = new MergeSort<Integer>().sort(Set.of(
-           0,3,4,6,7,9,2,5,10,15));
-
-        System.out.println("sorted 4: " + result4);
-
-        List<String> result5 = new MergeSort<String>().sort(Set.of(
-            "mono", "abc", "brown", "mix", "black", "white"));
-
-        System.out.println("sorted 5: " + result5);
+        System.out.println(new InsertionSort<Integer>().sort(LIST1));
+        System.out.println(new InsertionSort<Integer>().sort(LIST2));
+        System.out.println(new InsertionSort<Integer>().sort(LIST3));
     }
 }
