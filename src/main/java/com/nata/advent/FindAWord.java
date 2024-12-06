@@ -1,11 +1,12 @@
 package com.nata.advent;
 
-import static com.nata.advent.FileUtil.getAllLines;
+import static com.nata.advent.FileUtil.getFileContent;
+import static com.nata.advent.Lines.getAllLines;
 
 public class FindAWord {
 
     public static long countInFile(String word, String filePath) {
-        return getAllLines(filePath).stream()
+        return getAllLines(getFileContent(filePath)).stream()
             .map(line -> countInString(word, line))
             .reduce(0L, Long::sum);
     }
