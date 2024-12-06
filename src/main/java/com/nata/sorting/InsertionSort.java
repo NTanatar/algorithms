@@ -1,4 +1,4 @@
-package com.nata;
+package com.nata.sorting;
 
 import java.util.List;
 

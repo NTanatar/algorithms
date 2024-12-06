@@ -1,4 +1,4 @@
-package com.nata;
+package com.nata.sorting;
 
 import static java.util.Collections.emptyList;
 
