@@ -27,16 +27,14 @@ public class Lines {
     }
 
     public static List<String> getVerticalLines(List<String> data) {
-        List<String> downLines = new ArrayList<>();
+        Map<Integer, StringBuilder> verticalLines = new HashMap<>();
 
         for (int i = 0; i < data.getFirst().length(); i++) {
-            StringBuilder downLine = new StringBuilder();
-            for (String line : data) {
-                downLine.append(line.charAt(i));
+            for (String s : data) {
+                append(verticalLines, i, s.charAt(i));
             }
-            downLines.add(downLine.toString());
         }
-        return addReversed(downLines);
+        return addReversed(getValues(verticalLines));
     }
 
     public static List<String> getDiagonalLines(List<String> data) {
@@ -47,11 +45,21 @@ public class Lines {
                 append(diagonalLines, i + j, data.get(j).charAt(i));
             }
         }
-        List<String> result = diagonalLines.values().stream()
+        return addReversed(getValues(diagonalLines));
+    }
+
+    private static void append(Map<Integer, StringBuilder> map, int key, char value) {
+        if (map.containsKey(key)) {
+            map.get(key).append(value);
+        } else {
+            map.put(key, new StringBuilder(String.valueOf(value)));
+        }
+    }
+
+    private static List<String> getValues(Map<Integer, StringBuilder> map) {
+        return map.values().stream()
             .map(StringBuilder::toString)
             .collect(toList());
-
-        return addReversed(result);
     }
 
     private static List<String> addReversed(List<String> data) {
@@ -64,14 +72,6 @@ public class Lines {
         return new ArrayList<>(data).stream()
             .map(s -> new StringBuilder(s).reverse().toString())
             .toList();
-    }
-
-    private static void append(Map<Integer, StringBuilder> diagonalLines, int key, char value) {
-        if (diagonalLines.containsKey(key)) {
-            diagonalLines.get(key).append(value);
-        } else {
-            diagonalLines.put(key, new StringBuilder(String.valueOf(value)));
-        }
     }
 
     public static void main(String[] args) {
