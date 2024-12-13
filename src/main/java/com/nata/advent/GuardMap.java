@@ -8,10 +8,10 @@ import java.util.List;
 
 public class GuardMap {
 
-    List<String> map;
-    Position position;
-    int width;
-    int height;
+    private final List<String> map;
+    private Position position;
+    private final int width;
+    private final int height;
 
     public GuardMap(List<String> map) {
         this.map = map;
