@@ -1,11 +1,22 @@
 package com.nata.advent.garden;
 
+import static com.nata.advent.Direction.DOWN;
+import static com.nata.advent.Direction.LEFT;
+import static com.nata.advent.Direction.RIGHT;
+import static com.nata.advent.Direction.UP;
 import static com.nata.advent.FileUtil.getFileContent;
+import static com.nata.advent.garden.FenceDirection.EAST_WEST;
+import static com.nata.advent.garden.FenceDirection.NORTH_SOUTH;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class GardenFences {
@@ -31,33 +42,31 @@ public class GardenFences {
         calculateFences();
         calculateRegions();
         return regions.stream()
-            .map(this::calculateFencePrize)
+            .map(this::calculateFencePrizeWithDiscount)
             .reduce(0, Integer::sum);
     }
 
     private void calculateFences() {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                plots[y][x].setNumFences(calculateFences(plots[y][x]));
+                calculateFences(plots[y][x]);
             }
         }
     }
 
-    private int calculateFences(Plot p) {
-        int result = 0;
+    private void calculateFences(Plot p) {
         if (isLeftBorder(p) || getLeftNeighbor(p).getType() != p.getType()) {
-            result++;
+            p.addFence(LEFT);
         }
         if (isRightBorder(p) || getRightNeighbor(p).getType() != p.getType()) {
-            result++;
+            p.addFence(RIGHT);
         }
         if (isTopBorder(p) || getTopNeighbor(p).getType() != p.getType()) {
-            result++;
+            p.addFence(UP);
         }
         if (isBottomBorder(p) || getBottomNeighbor(p).getType() != p.getType()) {
-            result++;
+            p.addFence(DOWN);
         }
-        return result;
     }
 
     private void calculateRegions() {
@@ -125,6 +134,46 @@ public class GardenFences {
         System.out.println("Region " + r.getId() + " of " + r.getType()
             + ": area = " + area + ", perimeter = " + perimeter + " -> prize = " + prize);
         return prize;
+    }
+
+    private int calculateFencePrizeWithDiscount(Region r) {
+        int area = r.getPlots().size();
+        int numSides = calculateNumSides(r);
+        int prize = area * numSides;
+        System.out.println("Region " + r.getId() + " of " + r.getType()
+            + ": area = " + area + ", numSides = " + numSides + " -> prize = " + prize);
+        return prize;
+    }
+
+    private int calculateNumSides(Region r) {
+        Map<FenceDirection, List<FencePart>> byDirection = r.getPlots().stream()
+            .flatMap(p -> p.getFences().stream())
+            .collect(groupingBy(FencePart::getType));
+
+        return calculateNumSides(byDirection.get(EAST_WEST)) + calculateNumSides(byDirection.get(NORTH_SOUTH));
+    }
+
+    static int calculateNumSides(List<FencePart> fences) {
+        Map<String, List<Integer>> byLineId = fences.stream()
+            .collect(groupingBy(FencePart::getLineId, mapping(FencePart::getConstantValue, toList())));
+
+        return byLineId.values().stream()
+            .map(list -> countGaps(list) + 1)
+            .reduce(0, Integer::sum);
+    }
+
+    static int countGaps(List<Integer> values) {
+        if (values.size() <= 1) {
+            return 0;
+        }
+        int result = 0;
+        Collections.sort(values);
+        for (int i = 1; i < values.size(); i++) {
+            if (values.get(i) > values.get(i - 1) + 1) {
+                result++;
+            }
+        }
+        return result;
     }
 
     private boolean isLeftBorder(Plot p) {

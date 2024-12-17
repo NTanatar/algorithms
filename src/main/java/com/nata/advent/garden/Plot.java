@@ -1,5 +1,8 @@
 package com.nata.advent.garden;
 
+import com.nata.advent.Direction;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,14 +12,22 @@ public class Plot {
     private int x;
     private int y;
     private char type;
-    private int numFences;
     private Region region;
+    private List<FencePart> fences;
 
     public Plot(int x, int y, char type) {
         this.x = x;
         this.y = y;
         this.type = type;
-        this.numFences = 0;
+        this.fences = new ArrayList<>();
+    }
+
+    public void addFence(Direction d) {
+        this.fences.add(new FencePart(this, d));
+    }
+
+    public int getNumFences() {
+        return fences.size();
     }
 
     @Override
