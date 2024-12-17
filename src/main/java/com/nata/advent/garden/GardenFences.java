@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class GardenFences {
@@ -55,16 +56,16 @@ public class GardenFences {
     }
 
     private void calculateFences(Plot p) {
-        if (isLeftBorder(p) || getLeftNeighbor(p).getType() != p.getType()) {
+        if (!Objects.equals(getType(getLeftNeighbor(p)), p.getType())) {
             p.addFence(LEFT);
         }
-        if (isRightBorder(p) || getRightNeighbor(p).getType() != p.getType()) {
+        if (!Objects.equals(getType(getRightNeighbor(p)), p.getType())) {
             p.addFence(RIGHT);
         }
-        if (isTopBorder(p) || getTopNeighbor(p).getType() != p.getType()) {
+        if (!Objects.equals(getType(getTopNeighbor(p)), p.getType())) {
             p.addFence(UP);
         }
-        if (isBottomBorder(p) || getBottomNeighbor(p).getType() != p.getType()) {
+        if (!Objects.equals(getType(getBottomNeighbor(p)), p.getType())) {
             p.addFence(DOWN);
         }
     }
@@ -190,6 +191,12 @@ public class GardenFences {
 
     private boolean isBottomBorder(Plot p) {
         return p.getY() == height - 1;
+    }
+
+    private Character getType(Plot p) {
+        return ofNullable(p)
+            .map(Plot::getType)
+            .orElse(null);
     }
 
     private Plot getTopNeighbor(Plot p) {
