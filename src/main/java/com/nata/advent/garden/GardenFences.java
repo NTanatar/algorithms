@@ -154,7 +154,7 @@ public class GardenFences {
         return calculateNumSides(byDirection.get(EAST_WEST)) + calculateNumSides(byDirection.get(NORTH_SOUTH));
     }
 
-    static int calculateNumSides(List<FencePart> fences) {
+    private static int calculateNumSides(List<FencePart> fences) {
         Map<String, List<Integer>> byLineId = fences.stream()
             .collect(groupingBy(FencePart::getLineId, mapping(FencePart::getConstantValue, toList())));
 
@@ -163,7 +163,7 @@ public class GardenFences {
             .reduce(0, Integer::sum);
     }
 
-    static int countGaps(List<Integer> values) {
+    private static int countGaps(List<Integer> values) {
         if (values.size() <= 1) {
             return 0;
         }
