@@ -10,6 +10,11 @@ public class Position {
     private int y;
     private Direction direction;
 
+    public Position(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
     public Position(int x, int y, Direction direction) {
         this.x = x;
         this.y = y;
