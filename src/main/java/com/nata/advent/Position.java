@@ -33,4 +33,9 @@ public class Position {
             case RIGHT -> new Position(x + 1, y, direction);
         };
     }
+
+    @Override
+    public String toString() {
+        return "(" + x + "," + y + ")";
+    }
 }

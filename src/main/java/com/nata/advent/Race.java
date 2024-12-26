@@ -1,6 +1,8 @@
 package com.nata.advent;
 
 import static com.nata.advent.FileUtil.getFileContent;
+import static java.lang.Math.abs;
+import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toSet;
 
@@ -8,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,9 +21,11 @@ public class Race {
     private final Integer [][] racePath;
     private final int width;
     private final int height;
+    private final List<Position> raceTrack;
 
     @Getter
     @Setter
+    @Builder
     @EqualsAndHashCode
     static class Cheat {
         private Position p1;
@@ -34,16 +39,19 @@ public class Race {
         width = map.getFirst().length();
         height = map.size();
         racePath = new Integer[width][height];
+        raceTrack = new ArrayList<>();
     }
 
     public void calculateRacePath() {
         Position p = findStart();
+        raceTrack.add(p);
 
         int numSteps = 0;
         racePath[p.getX()][p.getY()] = numSteps;
 
         while (getMap(p) != 'E') {
             p = findNext(p);
+            raceTrack.add(p);
             racePath[p.getX()][p.getY()] = ++numSteps;
         }
     }
@@ -54,6 +62,30 @@ public class Race {
         for (int y = 1; y < height - 1; y++) {
             for (int x = 1; x < width - 1; x++) {
                 cheats.addAll(getCheatsForWall(x, y));
+            }
+        }
+        return cheats.stream().collect(groupingBy(Cheat::getWin, toSet()));
+    }
+
+    public Map<Integer, Set<Cheat>> getBigCheats(int minWin) {
+        if (minWin > raceTrack.size()) {
+            return emptyMap();
+        }
+        List<Cheat> cheats = new ArrayList<>();
+        int minPathDifference = minWin + 2; // min cost of a cheat
+        for (int i = 0; i < raceTrack.size() - minPathDifference; i++) {
+            for (int j = i + minPathDifference; j < raceTrack.size(); j++) {
+                Position p1 = raceTrack.get(i);
+                Position p2 = raceTrack.get(j);
+                int pathDiff = j - i;
+                int cheatCost = abs(p2.getX() - p1.getX()) + abs(p2.getY() - p1.getY());
+                if (cheatCost <= 20 && pathDiff - cheatCost >= minWin) {
+                    cheats.add(Cheat.builder()
+                        .p1(p1)
+                        .p2(p2)
+                        .win(pathDiff - cheatCost)
+                        .build());
+                }
             }
         }
         return cheats.stream().collect(groupingBy(Cheat::getWin, toSet()));
@@ -117,19 +149,15 @@ public class Race {
     }
 
     private Cheat createCheat(Position wall, Position a, Position b) {
-        Cheat cheat = new Cheat();
-        cheat.wall = wall;
+        Position p1 = getPathValue(a) < getPathValue(b) ? a : b;
+        Position p2 = getPathValue(a) > getPathValue(b) ? a : b;
 
-        if (getPathValue(a) < getPathValue(b)) {
-            cheat.p1 = a;
-            cheat.p2 = b;
-            cheat.win = getPathValue(b) - getPathValue(a) - 2;
-        } else {
-            cheat.p1 = b;
-            cheat.p2 = a;
-            cheat.win = getPathValue(a) - getPathValue(b) - 2;
-        }
-        return cheat;
+        return Cheat.builder()
+            .wall(wall)
+            .p1(p1)
+            .p2(p2)
+            .win(getPathValue(p2) - getPathValue(p1) - 2)
+            .build();
     }
 
     private int getPathValue(Position p) {
@@ -165,6 +193,9 @@ public class Race {
             }
         }
         System.out.println();
+        raceTrack.forEach(p -> System.out.print(p + "  "));
+        System.out.println();
+        System.out.println("--------------------------");
     }
 
     public static void main(String[] args) {
@@ -172,9 +203,8 @@ public class Race {
 
         race.calculateRacePath();
         //race.printRacePath();
-        //System.out.println("--------------------------");
 
-        Map<Integer, Set<Cheat>> cheatMap = race.calculateAllCheats();
+        Map<Integer, Set<Cheat>> cheatMap = race.getBigCheats(100);
 
         cheatMap.keySet().stream()
             .sorted().
