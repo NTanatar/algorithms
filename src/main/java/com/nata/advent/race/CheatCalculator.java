@@ -16,6 +16,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CheatCalculator {
 
+    private static final Integer MAX_CHEAT_LENGTH = 20;
+    private static final Integer MIN_CHEAT_LENGTH = 2;
+
     private final RaceField field;
 
     public Map<Integer, Set<Cheat>> getBigCheats(int minWin) {
@@ -23,14 +26,14 @@ public class CheatCalculator {
             return emptyMap();
         }
         List<Cheat> cheats = new ArrayList<>();
-        int minPathDifference = minWin + 2; // min cost of a cheat
+        int minPathDifference = minWin + MIN_CHEAT_LENGTH; // min cost of a cheat
         for (int i = 0; i < field.getRaceTrack().size() - minPathDifference; i++) {
             for (int j = i + minPathDifference; j < field.getRaceTrack().size(); j++) {
                 Position p1 = field.getRaceTrack().get(i);
                 Position p2 = field.getRaceTrack().get(j);
                 int pathDiff = j - i;
                 int cheatCost = abs(p2.getX() - p1.getX()) + abs(p2.getY() - p1.getY());
-                if (cheatCost <= 20 && pathDiff - cheatCost >= minWin) {
+                if (cheatCost <= MAX_CHEAT_LENGTH && pathDiff - cheatCost >= minWin) {
                     cheats.add(Cheat.builder()
                         .p1(p1)
                         .p2(p2)
