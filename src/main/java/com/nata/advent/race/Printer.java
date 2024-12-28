@@ -28,10 +28,9 @@ public class Printer {
         System.out.println();
     }
 
-    public static void printCheats(Map<Integer, Set<Cheat>> cheatMap, int minWin) {
+    public static void printCheats(Map<Integer, Set<Cheat>> cheatMap) {
         System.out.println("--------------------------");
         cheatMap.keySet().stream()
-            .filter(win -> win >= minWin)
             .sorted()
             .forEach(win -> System.out.println("win: " + win + ", " + cheatMap.get(win).size() + " cheats"));
     }

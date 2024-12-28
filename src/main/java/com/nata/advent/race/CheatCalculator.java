@@ -102,32 +102,38 @@ public class CheatCalculator {
             .reduce(0, Integer::sum);
     }
 
+    public static int countCheats(Map<Integer, Set<Cheat>> cheatMap) {
+        return cheatMap.keySet().stream()
+            .map(win -> cheatMap.get(win).size())
+            .reduce(0, Integer::sum);
+    }
+
     public static void main(String[] args) {
         System.out.println("Small race");
-        RaceField field = new RaceField(getFileContent("C:\\learning\\git\\algorithms\\src\\main\\resources\\smallrace.txt"));
+        RaceField smallField = new RaceField(getFileContent("C:\\learning\\git\\algorithms\\src\\main\\resources\\smallrace.txt"));
 
-        field.calculateRacePath();
-        Printer.printPath(field.getPathValues(), field.getWidth(), field.getHeight());
-        Printer.printPath(field.getRaceTrack());
+        smallField.calculateRacePath();
+        Printer.printPath(smallField.getPathValues(), smallField.getWidth(), smallField.getHeight());
+        Printer.printPath(smallField.getRaceTrack());
 
-        CheatCalculator cheatCalculator = new CheatCalculator(field);
-        Map<Integer, Set<Cheat>> cheatMap = cheatCalculator.calculateSmallCheats();
-        Printer.printCheats(cheatMap, 1);
-        System.out.println("number of small cheats with min win 50: " + countCheats(cheatMap, 50));
+        CheatCalculator smallRaceCheater = new CheatCalculator(smallField);
+        Map<Integer, Set<Cheat>> smallRaceSmallCheats = smallRaceCheater.calculateSmallCheats();
+        Printer.printCheats(smallRaceSmallCheats);
+        System.out.println("number of small cheats with min win 50: " + countCheats(smallRaceSmallCheats, 50));
 
-        cheatMap = cheatCalculator.getBigCheats(50);
-        Printer.printCheats(cheatMap, 50);
-        System.out.println("number of big cheats with min win 50: " + countCheats(cheatMap, 50));
+        Map<Integer, Set<Cheat>> smallRaceBigCheats = smallRaceCheater.getBigCheats(50);
+        Printer.printCheats(smallRaceBigCheats);
+        System.out.println("number of big cheats with min win 50: " + countCheats(smallRaceBigCheats));
 
         System.out.println("Big race");
         RaceField big = new RaceField(getFileContent("C:\\learning\\git\\algorithms\\src\\main\\resources\\bigrace.txt"));
         big.calculateRacePath();
-        cheatCalculator = new CheatCalculator(big);
+        CheatCalculator bigRaceCheater = new CheatCalculator(big);
 
-        cheatMap = cheatCalculator.calculateSmallCheats();
-        System.out.println("number of small cheats with min win 100: " + countCheats(cheatMap, 100));
+        Map<Integer, Set<Cheat>> bigRaceSmallCheats = bigRaceCheater.calculateSmallCheats();
+        System.out.println("number of small cheats with min win 100: " + countCheats(bigRaceSmallCheats, 100));
 
-        cheatMap = cheatCalculator.getBigCheats(100);
-        System.out.println("number of big cheats with min win 100: " + countCheats(cheatMap, 100));
+        Map<Integer, Set<Cheat>> bigRaceBigCheats = bigRaceCheater.getBigCheats(100);
+        System.out.println("number of big cheats with min win 100: " + countCheats(bigRaceBigCheats));
     }
 }
