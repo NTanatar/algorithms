@@ -20,6 +20,9 @@ public class Main {
 
     public static void main(String[] args) {
         ComputerGroups computerGroups = initFromFile("C:\\learning\\git\\algorithms\\src\\main\\resources\\smalllanparty.txt");
-        System.out.println(computerGroups.getGroups(3));
+        computerGroups.getTriples().stream()
+            .filter(triple -> triple.contains("t"))
+            .sorted()
+            .forEach(System.out::println);
     }
 }

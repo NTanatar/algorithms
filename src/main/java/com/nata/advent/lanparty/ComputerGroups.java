@@ -1,52 +1,42 @@
 package com.nata.advent.lanparty;
 
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.joining;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
+import lombok.Getter;
 
+@Getter
 public class ComputerGroups {
 
-    private final Map<String, Integer> groupIdByComputerName = new HashMap<>();
-    private final Map<Integer, Group> groupById = new HashMap<>();
+    Set<String> triples = new HashSet<>();
 
-    private int nextGroupId = 1;
+    Map<String, Set<String>> connections = new HashMap<>();
 
     public void addConnection(String name1, String name2) {
-        boolean firstGroupExists = groupIdByComputerName.containsKey(name1);
-        boolean secondGroupExists = groupIdByComputerName.containsKey(name2);
-
-        if (firstGroupExists && !secondGroupExists) {
-            int groupId = groupIdByComputerName.get(name1);
-            groupById.get(groupId).getNames().add(name2);
-            groupIdByComputerName.put(name2, groupId);
-
-        } else if (secondGroupExists && !firstGroupExists) {
-            int groupId = groupIdByComputerName.get(name2);
-            groupById.get(groupId).getNames().add(name1);
-            groupIdByComputerName.put(name1, groupId);
-
-        } else if (firstGroupExists && secondGroupExists) {
-            int first = groupIdByComputerName.get(name1);
-            int second = groupIdByComputerName.get(name2);
-            if (first != second) {
-                groupById.get(second).getNames().forEach(name -> groupIdByComputerName.put(name, first));
-                groupById.get(first).getNames().addAll(groupById.get(second).getNames());
-                groupById.remove(second);
-            }
-        } else {
-            int id = nextGroupId++;
-            Group g = new Group(id, name1, name2);
-            groupById.put(id, g);
-            groupIdByComputerName.put(name1, id);
-            groupIdByComputerName.put(name2, id);
-        }
+        System.out.println("------ " + name1 + " " + name2);
+        System.out.println("1: " + getConnectionsOf(name1));
+        System.out.println("2: " + getConnectionsOf(name2));
+        getConnectionsOf(name1).forEach(c -> addTriple(name1, c, name2));
+        getConnectionsOf(name2).forEach(c -> addTriple(name2, c, name1));
+        getConnectionsOf(name1).add(name2);
+        getConnectionsOf(name2).add(name1);
     }
 
-    public Set<Group> getGroups(int minSize) {
-        return groupById.values().stream()
-            .filter(group -> group.getNames().size() >= minSize)
-            .collect(toSet());
+    private Set<String> getConnectionsOf(String name) {
+        if (!connections.containsKey(name)) {
+            connections.put(name, new HashSet<>());
+        }
+        return connections.get(name);
+    }
+
+    private void addTriple(String name1, String name2, String name3) {
+        String code = Stream.of(name1, name2, name3).sorted()
+            .collect(joining("-"));
+        triples.add(code);
+        System.out.println("---------- > " + code);
     }
 }
