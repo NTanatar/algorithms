@@ -1,7 +1,7 @@
 package com.nata.codingame;
 
 import static java.util.Collections.emptySet;
-import static java.util.Collections.singleton;
+import static java.util.stream.Collectors.toSet;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,38 +14,42 @@ public class Stairs {
         if (sum < 3) {
             return emptySet();
         }
-        if (sum == 3) {
-            return singleton(List.of(1,2));
+        Set<List<Integer>> result = getAllPairs(sum);
+        if (sum <= 5) {
+            return result;
         }
-        return increaseEach(getStairs(sum - 1));
-    }
-
-    private static Set<List<Integer>> increaseEach(Set<List<Integer>> set) {
-        Set<List<Integer>> result = new HashSet<>();
-        set.forEach(list -> result.addAll(increase(list)));
-        return result;
-    }
-
-    private static Set<List<Integer>> increase(List<Integer> list) {
-        Set<List<Integer>> result = new HashSet<>();
-        if (list.getFirst() >= 2) {
-            result.add(append(list));
-        }
-        for (int i = list.size() - 1; i >= 0; i--) {
-            if (i == list.size() - 1 || list.get(i) + 1 < list.get(i + 1)) {
-                List<Integer> candidate = new ArrayList<>(list);
-                candidate.set(i, candidate.get(i) + 1);
-                result.add(candidate);
+        int last = sum - 3;
+        while (last > 0) {
+            Set<List<Integer>> combined = getCombinedStairs(sum - last, last);
+            if (combined.isEmpty()) {
+                break;
             }
+            result.addAll(combined);
+            last--;
         }
         return result;
     }
 
-    private static List<Integer> append(List<Integer> list) {
-        List<Integer> result = new ArrayList<>();
-        result.add(1);
-        result.addAll(list);
-        return result;
+    private static Set<List<Integer>> getCombinedStairs(int sum, int last) {
+        return getStairs(sum).stream()
+            .filter(half -> half.getLast() < last)
+            .map(half -> combine(half, last))
+            .collect(toSet());
+    }
+
+    private static Set<List<Integer>> getAllPairs(int sum) {
+        Set<List<Integer>> pairs = new HashSet<>();
+        int half = sum % 2 == 0 ? sum / 2 - 1 : sum / 2;
+        for (int i = 1; i <= half; i++) {
+            pairs.add(List.of(i, sum - i));
+        }
+        return pairs;
+    }
+
+    private static List<Integer> combine(List<Integer> list, int last) {
+        List<Integer> combined = new ArrayList<>(list);
+        combined.add(last);
+        return combined;
     }
 
     private static void print(Set<List<Integer>> set) {
