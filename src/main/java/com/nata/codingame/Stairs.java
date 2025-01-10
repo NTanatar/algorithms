@@ -23,6 +23,7 @@ public class Stairs {
         }
         Set<List<Integer>> result = getAllPairs(sum);
         if (sum <= 5) {
+            stairCache.put(sum, result);
             return result;
         }
         int last = sum - 3;
