@@ -4,15 +4,22 @@ import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toSet;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class Stairs {
 
-    public static Set<List<Integer>> getStairs(int sum) {
+    private final Map<Integer, Set<List<Integer>>> stairCache = new HashMap<>();
+
+    public Set<List<Integer>> getStairs(int sum) {
         if (sum < 3) {
             return emptySet();
+        }
+        if (stairCache.containsKey(sum)) {
+            return stairCache.get(sum);
         }
         Set<List<Integer>> result = getAllPairs(sum);
         if (sum <= 5) {
@@ -27,10 +34,11 @@ public class Stairs {
             result.addAll(combined);
             last--;
         }
+        stairCache.put(sum, result);
         return result;
     }
 
-    private static Set<List<Integer>> getCombinedStairs(int sum, int last) {
+    private Set<List<Integer>> getCombinedStairs(int sum, int last) {
         return getStairs(sum).stream()
             .filter(half -> half.getLast() < last)
             .map(half -> combine(half, last))
@@ -77,11 +85,11 @@ public class Stairs {
     }
 
     public static void main(String[] args) {
-        for(int i = 2; i <= 15; i++) {
+        for(int i = 2; i <= 100; i++) {
             System.out.println("------------------");
-            Set<List<Integer>> set = getStairs(i);
+            Set<List<Integer>> set = new Stairs().getStairs(i);
             System.out.println(i + ":  size= "+ set.size());
-            print(set);
+            //print(set);
         }
     }
 }
