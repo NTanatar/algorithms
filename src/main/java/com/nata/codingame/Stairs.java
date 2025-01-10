@@ -48,9 +48,36 @@ public class Stairs {
         return result;
     }
 
+    private static void print(Set<List<Integer>> set) {
+        set.stream()
+            .sorted(Stairs::compare)
+            .forEach(System.out::println);
+    }
+
+    private static int compare(List<Integer> list1, List<Integer> list2) {
+        if (list1.size() < list2.size()) {
+            return -1;
+        }
+        if (list1.size() > list2.size()) {
+            return 1;
+        }
+        for (int i = 0; i < list1.size(); i++) {
+            if (list1.get(i) < list2.get(i)) {
+                return -1;
+            }
+            if (list1.get(i) > list2.get(i)) {
+                return 1;
+            }
+        }
+        return 0;
+    }
+
     public static void main(String[] args) {
-        for(int i = 2; i <= 10; i++) {
-            System.out.println(i + ": " + getStairs(i));
+        for(int i = 2; i <= 15; i++) {
+            System.out.println("------------------");
+            Set<List<Integer>> set = getStairs(i);
+            System.out.println(i + ":  size= "+ set.size());
+            print(set);
         }
     }
 }
