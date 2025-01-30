@@ -17,7 +17,7 @@ public class GardenFences {
             .reduce(0, Integer::sum);
     }
 
-    public static void main(String[] args) {
+    public static void testWithStrategy(PrizeCalculationStrategy strategy) {
         GardenMap g1 = new GardenMap(getFileContent("C:\\learning\\git\\algorithms\\src\\main\\resources\\garden1.txt"));
         initGardenMap(g1);
         GardenMap g2 = new GardenMap(getFileContent("C:\\learning\\git\\algorithms\\src\\main\\resources\\garden2.txt"));
@@ -25,29 +25,22 @@ public class GardenFences {
         GardenMap g3 = new GardenMap(getFileContent("C:\\learning\\git\\algorithms\\src\\main\\resources\\biggarden.txt"));
         initGardenMap(g3);
 
-        PrizeCalculationStrategy perimeterStrategy = new PrizeCalculationWithPerimeter();
-        PrizeCalculationStrategy sidesStrategy = new PrizeCalculationWithSides();
-
-        System.out.println("-------- calculating with perimeter: ");
         printRegions(g1);
-        printRegionPrizes(g1, perimeterStrategy);
-        System.out.println("garden1: " + calculateFencePrize(g1, perimeterStrategy));
+        printRegionPrizes(g1, strategy);
+        System.out.println("garden1: " + calculateFencePrize(g1, strategy));
 
         printRegions(g2);
-        printRegionPrizes(g2, perimeterStrategy);
-        System.out.println("garden2: " + calculateFencePrize(g2, perimeterStrategy));
+        printRegionPrizes(g2, strategy);
+        System.out.println("garden2: " + calculateFencePrize(g2, strategy));
 
-        System.out.println("garden3: " + calculateFencePrize(g3, perimeterStrategy));
+        System.out.println("garden3: " + calculateFencePrize(g3, strategy));
+    }
+
+    public static void main(String[] args) {
+        System.out.println("-------- calculating with perimeter: ");
+        testWithStrategy(new PrizeCalculationWithPerimeter());
 
         System.out.println("-------- calculating with sides: ");
-        printRegions(g1);
-        printRegionPrizes(g1, sidesStrategy);
-        System.out.println("garden1: " + calculateFencePrize(g1, sidesStrategy));
-
-        printRegions(g2);
-        printRegionPrizes(g2, sidesStrategy);
-        System.out.println("garden2: " + calculateFencePrize(g2, sidesStrategy));
-
-        System.out.println("garden3: " + calculateFencePrize(g3, sidesStrategy));
+        testWithStrategy(new PrizeCalculationWithSides());
     }
 }
