@@ -1,7 +1,5 @@
 package com.nata.advent.garden;
 
-import static com.nata.advent.garden.PrizeCalculator.calculatePrizeWithPerimeter;
-import static com.nata.advent.garden.PrizeCalculator.calculatePrizeWithSides;
 import static java.util.Optional.ofNullable;
 
 public class Printer {
@@ -28,19 +26,11 @@ public class Printer {
         }
     }
 
-    public static void printRegionPrizesWithPerimeter(GardenMap map) {
-        System.out.println("RegionPrizes with perimeter:");
+    public static void printRegionPrizes(GardenMap map, PrizeCalculationStrategy strategy) {
+        System.out.println("RegionPrizes with Strategy " + strategy);
         map.getRegions().forEach(r ->
             System.out.println("Region " + r.getId() + " of " + r.getType()
-                + ": area = " + r.getArea() + ", perimeter = " + r.getPerimeter() + " -> prize = "
-                + calculatePrizeWithPerimeter(r)));
-    }
-
-    public static void printRegionPrizesWithSides(GardenMap map) {
-        System.out.println("RegionPrizes with sides:");
-        map.getRegions().forEach(r ->
-            System.out.println("Region " + r.getId() + " of " + r.getType()
-                + ": area = " + r.getArea() + ", sides = " + r.getNumSides() + " -> prize = "
-                + calculatePrizeWithSides(r)));
+                + ": area = " + r.getArea() + ", perimeter = " + r.getPerimeter() + ", sides = " + r.getNumSides()
+                + " -> prize = "  + strategy.calculatePrize(r)));
     }
 }
