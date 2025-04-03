@@ -32,8 +32,8 @@ public class FindAWord {
         System.out.println(countInString("om", "omkskskdkom"));
         System.out.println(countInString("om", "dfgromkskskdkom"));
 
-        System.out.println(countInFile("XMAS", "C:\\learning\\git\\algorithms\\src\\main\\resources\\smallwords.txt"));
+        System.out.println(countInFile("XMAS", "smallwords.txt"));
 
-        System.out.println(countInFile("XMAS", "C:\\learning\\git\\algorithms\\src\\main\\resources\\findaword.txt"));
+        System.out.println(countInFile("XMAS", "findaword.txt"));
     }
 }

@@ -72,7 +72,7 @@ public class GuardMap {
     }
 
     public static void main(String[] args) {
-        GuardMap guardMap = new GuardMap(getFileContent("C:\\learning\\git\\algorithms\\src\\main\\resources\\bigmap.txt"));
+        GuardMap guardMap = new GuardMap(getFileContent("bigmap.txt"));
         System.out.println(guardMap.countGuardPositions());
     }
 }

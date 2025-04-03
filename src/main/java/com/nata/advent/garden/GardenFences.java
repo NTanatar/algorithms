@@ -18,11 +18,11 @@ public class GardenFences {
     }
 
     public static void testWithStrategy(PrizeCalculationStrategy strategy) {
-        GardenMap g1 = new GardenMap(getFileContent("C:\\learning\\git\\algorithms\\src\\main\\resources\\garden1.txt"));
+        GardenMap g1 = new GardenMap(getFileContent("garden1.txt"));
         initGardenMap(g1);
-        GardenMap g2 = new GardenMap(getFileContent("C:\\learning\\git\\algorithms\\src\\main\\resources\\garden2.txt"));
+        GardenMap g2 = new GardenMap(getFileContent("garden2.txt"));
         initGardenMap(g2);
-        GardenMap g3 = new GardenMap(getFileContent("C:\\learning\\git\\algorithms\\src\\main\\resources\\biggarden.txt"));
+        GardenMap g3 = new GardenMap(getFileContent("biggarden.txt"));
         initGardenMap(g3);
 
         printRegions(g1);

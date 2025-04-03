@@ -113,7 +113,7 @@ public class CheatCalculator {
 
     public static void main(String[] args) {
         System.out.println("Small race");
-        RaceField smallField = new RaceField(getFileContent("C:\\learning\\git\\algorithms\\src\\main\\resources\\smallrace.txt"));
+        RaceField smallField = new RaceField(getFileContent("smallrace.txt"));
 
         smallField.calculateRacePath();
         Printer.printPath(smallField.getPathValues(), smallField.getWidth(), smallField.getHeight());
@@ -129,7 +129,7 @@ public class CheatCalculator {
         System.out.println("number of big cheats with min win 50: " + countCheats(smallRaceBigCheats));
 
         System.out.println("Big race");
-        RaceField big = new RaceField(getFileContent("C:\\learning\\git\\algorithms\\src\\main\\resources\\bigrace.txt"));
+        RaceField big = new RaceField(getFileContent("bigrace.txt"));
         big.calculateRacePath();
         CheatCalculator bigRaceCheater = new CheatCalculator(big);
 

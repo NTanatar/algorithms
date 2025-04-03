@@ -75,11 +75,11 @@ public class Lines {
     }
 
     public static void main(String[] args) {
-        String path = "C:\\learning\\git\\algorithms\\src\\main\\resources\\smallwords.txt";
+        String path = "smallwords.txt";
 
         System.out.println("horizontal: " + getHorizontalLines(getFileContent(path)));
         System.out.println("vertical: " + getVerticalLines(getFileContent(path)));
 
-        System.out.println("diagonal: " + getDiagonalLines(getFileContent("C:\\learning\\git\\algorithms\\src\\main\\resources\\diagonals.txt")));
+        System.out.println("diagonal: " + getDiagonalLines(getFileContent("diagonals.txt")));
     }
 }
