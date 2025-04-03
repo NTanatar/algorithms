@@ -25,7 +25,7 @@ public class QuickSort<T extends Comparable<T>> {
     }
 
     public QuickSort<T> withFirstElementAsPivot() {
-        pivotFunction = _ -> 0;
+        pivotFunction = t -> 0;
         return this;
     }
 
