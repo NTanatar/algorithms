@@ -1,5 +1,6 @@
 package com.nata.jsonmapper;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.List;
@@ -7,6 +8,9 @@ import java.util.List;
 public class NataMapper {
 
     public static String toJson(Object obj) throws IllegalAccessException {
+        if (obj == null) {
+            return "null";
+        }
         if (obj instanceof String || obj instanceof Character) {
             return "\"" + obj + "\"";
         }
@@ -16,10 +20,11 @@ public class NataMapper {
         if (obj instanceof Enum<?>) {
             return "\"" + ((Enum<?>) obj).name() + "\"";
         }
-        // todo arrays
-
         if (obj instanceof Collection<?>) {
             return collectionToJson(obj);
+        }
+        if (obj.getClass().isArray()) {
+            return arrayToJson(obj);
         }
         return compositeToJson(obj);
     }
@@ -35,6 +40,7 @@ public class NataMapper {
                 .color(Color.GREEN)
                 .diameter(23)
                 .solid(true)
+                .tags(new String[]{"A", "B", "C"})
                 .build())
             .backWheel(Wheel.builder()
                 .color(Color.GREEN)
@@ -46,7 +52,6 @@ public class NataMapper {
         System.out.println(toJson(scooter));
     }
 
-
     private static String compositeToJson(Object obj) throws IllegalAccessException {
         StringBuilder builder = new StringBuilder();
         builder.append("{");
@@ -57,11 +62,24 @@ public class NataMapper {
                 .append(field.getName())
                 .append("\": ");
             Object value = field.get(obj);
-            builder.append(value == null ? "null" : toJson(value));
+            builder.append(toJson(value));
             builder.append(",");
         }
         builder.deleteCharAt(builder.length() - 1);
         builder.append("}");
+        return builder.toString();
+    }
+
+    private static String arrayToJson(Object obj) throws IllegalAccessException {
+        StringBuilder builder = new StringBuilder();
+        builder.append("[");
+        for (int i = 0; i < Array.getLength(obj); i++ ) {
+            Object element = Array.get(obj, i);
+            builder.append(toJson(element));
+            builder.append(",");
+        }
+        builder.deleteCharAt(builder.length() - 1);
+        builder.append("]");
         return builder.toString();
     }
 

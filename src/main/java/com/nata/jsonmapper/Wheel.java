@@ -9,4 +9,5 @@ public class Wheel {
     private int diameter;
     private boolean solid;
     private Color color;
+    private String[] tags;
 }
