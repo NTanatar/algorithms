@@ -1,5 +1,6 @@
 package com.nata.jsonmapper;
 
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,5 +13,5 @@ public class Scooter {
     private int length;
     private Wheel frontWheel;
     private Wheel backWheel;
-    private Color mainColor;
+    private List<Color> colors;
 }
